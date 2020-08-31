@@ -1,5 +1,7 @@
 const router = require('express').Router()
-const User = require('../db/models/user')
+const Player = require('../db/models/player')
+const pick = require('lodash/pick')
+const {v4: uuidv4} = require('uuid')
 module.exports = router
 
 router.post('/login', async (req, res, next) => {
@@ -21,7 +23,10 @@ router.post('/login', async (req, res, next) => {
 
 router.post('/signup', async (req, res, next) => {
   try {
-    const user = await User.create(req.body)
+    const filteredPlayer = pick(req.body, ['username'])
+    filteredPlayer.uuid = uuidv4()
+    console.log('filteredPlayer', filteredPlayer)
+    const user = await Player.create(filteredPlayer)
     req.login(user, err => (err ? next(err) : res.json(user)))
   } catch (err) {
     if (err.name === 'SequelizeUniqueConstraintError') {

@@ -1,24 +1,30 @@
-'use strict'
-
 const db = require('../server/db')
-const {User} = require('../server/db/models')
+const {Card} = require('../server/db/models')
+
+const cards = []
+
+const suits = ['spades', 'diamonds', 'clubs', 'hearts']
+
+for (let i = 9; i <= 14; i++) {
+  for (let j = 0; j < 4; j++) {
+    cards.push({
+      value: i,
+      suit: suits[j],
+      threePlayer: i !== 9
+    })
+  }
+}
 
 async function seed() {
   await db.sync({force: true})
-  console.log('db synced!')
 
-  const users = await Promise.all([
-    User.create({email: 'cody@email.com', password: '123'}),
-    User.create({email: 'murphy@email.com', password: '123'})
-  ])
+  const seedCards = async () => {
+    await Promise.all(cards.map(card => Card.create(card)))
+  }
 
-  console.log(`seeded ${users.length} users`)
-  console.log(`seeded successfully`)
+  await seedCards()
 }
 
-// We've separated the `seed` function from the `runSeed` function.
-// This way we can isolate the error handling and exit trapping.
-// The `seed` function is concerned only with modifying the database.
 async function runSeed() {
   console.log('seeding...')
   try {
@@ -41,4 +47,4 @@ if (module === require.main) {
 }
 
 // we export the seed function for testing purposes (see `./seed.spec.js`)
-module.exports = seed
+// module.exports = seed

@@ -13,6 +13,7 @@ const Player = db.define('player', {
   username: {
     type: Sequelize.STRING,
     allowNull: false,
+    unique: true,
     validate: {
       notEmpty: true
     }

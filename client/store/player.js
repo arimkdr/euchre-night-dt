@@ -4,19 +4,19 @@ import history from '../history'
 /**
  * ACTION TYPES
  */
-const GET_USER = 'GET_USER'
-const REMOVE_USER = 'REMOVE_USER'
+const GET_PLAYER = 'GET_PLAYER'
+const REMOVE_PLAYER = 'REMOVE_PLAYER'
 
 /**
  * INITIAL STATE
  */
-const defaultUser = {}
+const defaultPlayer = {}
 
 /**
  * ACTION CREATORS
  */
-const getUser = user => ({type: GET_USER, user})
-const removeUser = () => ({type: REMOVE_USER})
+const getPlayer = player => ({type: GET_PLAYER, player})
+const removePlayer = () => ({type: REMOVE_PLAYER})
 
 /**
  * THUNK CREATORS
@@ -24,22 +24,22 @@ const removeUser = () => ({type: REMOVE_USER})
 export const me = () => async dispatch => {
   try {
     const res = await axios.get('/auth/me')
-    dispatch(getUser(res.data || defaultUser))
+    dispatch(getPlayer(res.data || defaultPlayer))
   } catch (err) {
     console.error(err)
   }
 }
 
-export const auth = (email, password, method) => async dispatch => {
+export const auth = (username, password, method) => async dispatch => {
   let res
   try {
-    res = await axios.post(`/auth/${method}`, {email, password})
+    res = await axios.post(`/auth/${method}`, {username, password})
   } catch (authError) {
-    return dispatch(getUser({error: authError}))
+    return dispatch(getPlayer({error: authError}))
   }
 
   try {
-    dispatch(getUser(res.data))
+    dispatch(getPlayer(res.data))
     history.push('/home')
   } catch (dispatchOrHistoryErr) {
     console.error(dispatchOrHistoryErr)
@@ -49,7 +49,7 @@ export const auth = (email, password, method) => async dispatch => {
 export const logout = () => async dispatch => {
   try {
     await axios.post('/auth/logout')
-    dispatch(removeUser())
+    dispatch(removePlayer())
     history.push('/login')
   } catch (err) {
     console.error(err)
@@ -59,12 +59,12 @@ export const logout = () => async dispatch => {
 /**
  * REDUCER
  */
-export default function(state = defaultUser, action) {
+export default function(state = defaultPlayer, action) {
   switch (action.type) {
-    case GET_USER:
-      return action.user
-    case REMOVE_USER:
-      return defaultUser
+    case GET_PLAYER:
+      return action.player
+    case REMOVE_PLAYER:
+      return defaultPlayer
     default:
       return state
   }
