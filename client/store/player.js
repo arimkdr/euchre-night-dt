@@ -39,6 +39,7 @@ export const auth = (username, password, method) => async dispatch => {
   }
 
   try {
+    console.log('res.data', res.data)
     dispatch(getPlayer(res.data))
     history.push('/home')
   } catch (dispatchOrHistoryErr) {

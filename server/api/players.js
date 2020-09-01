@@ -9,7 +9,7 @@ router.get('/', async (req, res, next) => {
       // explicitly select only the id and email fields - even though
       // users' passwords are encrypted, it won't help if we just
       // send everything to anyone who asks!
-      attributes: ['uuid', 'username']
+      attributes: ['id', 'username']
     })
     res.json(players)
   } catch (err) {
@@ -19,8 +19,8 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const filteredPlayer = pick(req.body, ['username'])
-    const newPlayer = await Player.create(filteredPlayer)
+    console.log('req.body', req.body)
+    const newPlayer = await Player.create(req.body)
     res.send(newPlayer)
   } catch (err) {
     next(err)
