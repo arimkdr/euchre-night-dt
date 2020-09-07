@@ -2,33 +2,42 @@ import React from 'react'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import {auth} from '../store'
+import {Backdrop, Button, TextField, InputLabel} from '@material-ui/core'
+import useStyles from './utils/styles'
 
-/**
- * COMPONENT
- */
+//redo with formic?
 const AuthForm = props => {
   const {name, displayName, handleSubmit, error} = props
+  const classes = useStyles()
 
   return (
     <div>
-      <form onSubmit={handleSubmit} name={name}>
-        <div>
-          <label htmlFor="username">
-            <small>Username</small>
-          </label>
-          <input name="username" type="text" />
-        </div>
-        <div>
-          <label htmlFor="password">
-            <small>Password</small>
-          </label>
-          <input name="password" type="password" />
-        </div>
-        <div>
-          <button type="submit">{displayName}</button>
-        </div>
-        {error && error.response && <div> {error.response.data} </div>}
-      </form>
+      <Backdrop open={true} className={classes.backdropA}>
+        <form
+          onSubmit={handleSubmit}
+          name={name}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}
+        >
+          <div>
+            <InputLabel htmlFor="username">Username</InputLabel>
+            <TextField name="username" type="text" />
+          </div>
+          <div>
+            <InputLabel htmlFor="password">Password</InputLabel>
+            <TextField name="password" type="password" />
+          </div>
+          <div>
+            <Button type="submit" className={classes.buttonA}>
+              {displayName}
+            </Button>
+          </div>
+          {error && error.response && <div> {error.response.data} </div>}
+        </form>
+      </Backdrop>
     </div>
   )
 }
