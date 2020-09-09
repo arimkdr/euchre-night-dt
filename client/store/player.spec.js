@@ -1,7 +1,7 @@
 /* global describe beforeEach afterEach it */
 
 import {expect} from 'chai'
-import {me, logout} from './user'
+import {me, logout} from './player'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import configureMockStore from 'redux-mock-store'
@@ -15,7 +15,7 @@ describe('thunk creators', () => {
   let store
   let mockAxios
 
-  const initialState = {user: {}}
+  const initialState = {player: {}}
 
   beforeEach(() => {
     mockAxios = new MockAdapter(axios)
@@ -28,22 +28,22 @@ describe('thunk creators', () => {
   })
 
   describe('me', () => {
-    it('eventually dispatches the GET USER action', async () => {
-      const fakeUser = {email: 'Cody'}
-      mockAxios.onGet('/auth/me').replyOnce(200, fakeUser)
+    it('eventually dispatches the GET PLAYER action', async () => {
+      const fakePlayer = {username: 'Cody'}
+      mockAxios.onGet('/auth/me').replyOnce(200, fakePlayer)
       await store.dispatch(me())
       const actions = store.getActions()
-      expect(actions[0].type).to.be.equal('GET_USER')
-      expect(actions[0].user).to.be.deep.equal(fakeUser)
+      expect(actions[0].type).to.be.equal('GET_PLAYER')
+      expect(actions[0].player).to.be.deep.equal(fakePlayer)
     })
   })
 
   describe('logout', () => {
-    it('logout: eventually dispatches the REMOVE_USER action', async () => {
+    it('logout: eventually dispatches the REMOVE_PLAYER action', async () => {
       mockAxios.onPost('/auth/logout').replyOnce(204)
       await store.dispatch(logout())
       const actions = store.getActions()
-      expect(actions[0].type).to.be.equal('REMOVE_USER')
+      expect(actions[0].type).to.be.equal('REMOVE_PLAYER')
       expect(history.location.pathname).to.be.equal('/login')
     })
   })
